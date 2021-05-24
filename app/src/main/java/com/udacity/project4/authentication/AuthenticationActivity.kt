@@ -26,14 +26,8 @@ class AuthenticationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authentication)
-//         TODO: Implement the create account and sign in using FirebaseUI, use sign in using email and sign in using Google
         checkAuthenticationState()
-
-//          TODO: If the user was authenticated, send him to RemindersActivity
-
-//          TODO: a bonus is to customize the sign in flow to look nice using :
-        //https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md#custom-layout
-
+        // https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md#custom-layout
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -41,11 +35,7 @@ class AuthenticationActivity : AppCompatActivity() {
         if (requestCode == SIGN_IN_RESULT_CODE) {
             val response = IdpResponse.fromResultIntent(data)
             if (resultCode == Activity.RESULT_OK) {
-                Log.i(
-                    TAG,
-                    "Successfully signed in user " +
-                        "${FirebaseAuth.getInstance().currentUser?.displayName}!"
-                )
+                goRemindersList()
             } else {
                 Log.i(TAG, "Sign in unsuccessful ${response?.error?.errorCode}")
             }
@@ -55,13 +45,17 @@ class AuthenticationActivity : AppCompatActivity() {
     private fun checkAuthenticationState() {
         val firebaseAuth = FirebaseAuth.getInstance()
         if (firebaseAuth.currentUser != null) {
-            startActivity(Intent(this, RemindersActivity::class.java))
-            finish()
+            goRemindersList()
         } else {
             binding = DataBindingUtil.setContentView(this, R.layout.activity_authentication)
-
             initSignIn()
         }
+    }
+
+    private fun goRemindersList() {
+        val intent = Intent(this, RemindersActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun launchSignInFlow() {
