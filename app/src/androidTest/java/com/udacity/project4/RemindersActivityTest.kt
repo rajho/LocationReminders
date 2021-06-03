@@ -68,4 +68,31 @@ class RemindersActivityTest :
 
 //    TODO: add End to End testing to the app
 
+
+    // TODO OnMapReady execute this flow ->
+
+    // Check fine and background location permissions
+    // If granted
+    //    Check Location on device (FUNCTION B)
+    //    If granted
+    //      Enable mylocation in GoogleMap
+    //      move camera to my location in GoogleMap
+    //    If NOT granted
+    //      Request resolution for location
+    //      OR Notify the user that location services must be enabled
+    // If NOT granted
+    //    request fine and background location permissions
+
+    // On Location Permissions Result
+    // If granted
+    //    Check Location on device (FUNCTION B)
+    //    If granted
+    //      Enable mylocation in GoogleMap
+    //      move camera to my location in GoogleMap
+    //    If NOT granted
+    //      Request resolution for location
+    //      OR Notify the user that location services must be enabled
+    // If NOT granted
+    //    Notify user he needs to grant location permission
+
 }
