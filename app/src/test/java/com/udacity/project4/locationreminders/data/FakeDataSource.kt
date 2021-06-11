@@ -2,6 +2,8 @@ package com.udacity.project4.locationreminders.data
 
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
+import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
+import kotlinx.coroutines.runBlocking
 import java.lang.Exception
 
 //Use FakeDataSource that acts as a test double to the LocalDataSource
@@ -44,6 +46,12 @@ class FakeDataSource(var reminders: MutableList<ReminderDTO>? = mutableListOf())
 
     fun setReturnError(value: Boolean) {
         shouldReturnError = value
+    }
+
+    fun addReminders(vararg items: ReminderDTO) {
+        for (reminder in items) {
+            reminders?.add(reminder)
+        }
     }
 
 
