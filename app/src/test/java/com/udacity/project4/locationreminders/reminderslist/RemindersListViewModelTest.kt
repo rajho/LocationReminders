@@ -1,6 +1,6 @@
 package com.udacity.project4.locationreminders.reminderslist
 
-import android.os.Looper.getMainLooper
+
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -21,8 +21,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.core.context.stopKoin
-import org.robolectric.Shadows.shadowOf
-import org.robolectric.annotation.LooperMode
 
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
