@@ -1,6 +1,5 @@
 package com.udacity.project4.locationreminders.savereminder
 
-import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.PointOfInterest
@@ -13,8 +12,8 @@ import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import com.udacity.project4.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 
-class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSource) :
-    BaseViewModel(app) {
+class SaveReminderViewModel(val dataSource: ReminderDataSource) :
+    BaseViewModel() {
     val reminderTitle = MutableLiveData<String>()
     val reminderDescription = MutableLiveData<String>()
     val reminderSelectedLocationStr = MutableLiveData<String>()
@@ -63,7 +62,7 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
             )
             addGeofenceEvent.value = false
             showLoading.value = false
-            showToast.value = app.getString(R.string.reminder_saved)
+            showToastInt.value = R.string.reminder_saved
             navigationCommand.value = NavigationCommand.Back
         }
     }
