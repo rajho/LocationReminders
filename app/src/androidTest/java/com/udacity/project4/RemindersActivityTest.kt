@@ -11,7 +11,6 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -20,7 +19,6 @@ import com.udacity.project4.authentication.FirebaseUserLiveData
 import com.udacity.project4.base.DataBindingViewHolder
 import com.udacity.project4.locationreminders.RemindersActivity
 import com.udacity.project4.locationreminders.data.ReminderDataSource
-import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.local.LocalDB
 import com.udacity.project4.locationreminders.data.local.RemindersLocalRepository
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
@@ -134,6 +132,21 @@ class RemindersActivityTest :
 				hasDescendant(withText("Buy fruit"))
 			)
 		)
+
+		activityScenario.close()
+	}
+
+	@Test
+	fun selectLocation_doubleBackButton_displayRemindersListScreen() {
+		val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+		dataBindingIdlingResource.monitorActivity(activityScenario)
+
+		onView(withId(R.id.addReminderFAB)).perform(click())
+		onView(withId(R.id.selectLocation)).perform(click())
+		pressBack()
+		pressBack()
+
+		onView(withId(R.id.noDataTextView)).check(matches(isDisplayed()))
 
 		activityScenario.close()
 	}
