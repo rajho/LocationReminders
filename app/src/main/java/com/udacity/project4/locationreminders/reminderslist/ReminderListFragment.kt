@@ -75,8 +75,7 @@ class ReminderListFragment : BaseFragment() {
     private fun setupRecyclerView() {
         val adapter = RemindersListAdapter {
         }
-
-//        setup the recycler view using the extension function
+        // setup the recycler view using the extension function
         binding.reminderssRecyclerView.setup(adapter)
     }
 
@@ -101,6 +100,8 @@ class ReminderListFragment : BaseFragment() {
                 RemindersListViewModel.AuthenticationState.AUTHENTICATED -> { }
                 else -> {
                     val intent = Intent(requireActivity(), AuthenticationActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                 }
             }

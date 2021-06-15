@@ -1,6 +1,7 @@
 package com.udacity.project4
 
 import android.Manifest
+import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.map
 import androidx.test.core.app.ActivityScenario
@@ -11,6 +12,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -28,6 +30,8 @@ import com.udacity.project4.util.DataBindingIdlingResource
 import com.udacity.project4.util.monitorActivity
 import com.udacity.project4.utils.EspressoIdlingResource
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.core.Is.`is`
+import org.hamcrest.core.IsNot.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -53,7 +57,7 @@ class RemindersActivityTest :
 	private val dataBindingIdlingResource = DataBindingIdlingResource()
 
 	@get:Rule
-	val mRuntimePermissionRule = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION)
+	val mRuntimePermissionRule: GrantPermissionRule = GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION)
 
 	/**
 	 * As we use Koin as a Service Locator Library to develop our code, we'll also use Koin to test our code.
@@ -100,9 +104,6 @@ class RemindersActivityTest :
 		IdlingRegistry.getInstance().register(dataBindingIdlingResource)
 	}
 
-	/**
-	 * Unregister your Idling Resource so it can be garbage collected and does not leak any memory.
-	 */
 	@After
 	fun unregisterIdlingResource() {
 		IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
@@ -110,14 +111,14 @@ class RemindersActivityTest :
 	}
 
 	@Test
-	fun newReminder_isDisplayedInRemindersListFragment() = runBlocking {
+	fun newReminder_isDisplayedInRemindersListScreen() = runBlocking {
 		val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
 		dataBindingIdlingResource.monitorActivity(activityScenario)
 
 		onView(withId(R.id.noDataTextView)).check(matches(isDisplayed()))
 		onView(withId(R.id.addReminderFAB)).perform(click())
 		onView(withId(R.id.selectLocation)).perform(click())
-		Thread.sleep(2000L)
+		Thread.sleep(1000L)
 
 		onView(withId(R.id.map)).perform(click())
 		onView(withId(R.id.save_button)).perform(click())
@@ -125,6 +126,14 @@ class RemindersActivityTest :
 		onView(withId(R.id.reminderDescription)).perform(typeText("Buy 1 week fruit"))
 		closeSoftKeyboard()
 		onView(withId(R.id.saveReminder)).perform(click())
+
+		// TOAST TEST
+		assert(getActivity(activityScenario) != null)
+		getActivity(activityScenario)?.run {
+			onView(withText(R.string.reminder_saved))
+				.inRoot(withDecorView(not(this.window.decorView)))
+				.check(matches(isDisplayed()))
+		}
 
 		onView(withId(R.id.reminderssRecyclerView)).check(matches(isDisplayed()))
 		onView(withId(R.id.reminderssRecyclerView)).perform(
@@ -134,6 +143,66 @@ class RemindersActivityTest :
 		)
 
 		activityScenario.close()
+	}
+
+	@Test
+	fun invalidReminder_onSave_displayNoTitleValidationSnackbar() = runBlocking {
+		val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+		dataBindingIdlingResource.monitorActivity(activityScenario)
+
+		onView(withId(R.id.addReminderFAB)).perform(click())
+		onView(withId(R.id.saveReminder)).perform(click())
+		onView(withId(com.google.android.material.R.id.snackbar_text))
+			.check(matches(withText(R.string.err_enter_title)))
+
+		activityScenario.close()
+	}
+
+	@Test
+	fun invalidReminder_onSave_displayNoLocationValidationSnackbar() = runBlocking {
+		val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+		dataBindingIdlingResource.monitorActivity(activityScenario)
+
+		onView(withId(R.id.addReminderFAB)).perform(click())
+		onView(withId(R.id.reminderTitle)).perform(typeText("Buy fruit"))
+		closeSoftKeyboard()
+		onView(withId(R.id.saveReminder)).perform(click())
+
+		onView(withId(com.google.android.material.R.id.snackbar_text))
+			.check(matches(withText(R.string.err_select_location)))
+
+		activityScenario.close()
+	}
+
+
+
+	@Test
+	fun selectLocationToast_isDisplayedInSelectReminderLocationScreen() {
+		val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+		dataBindingIdlingResource.monitorActivity(activityScenario)
+
+		onView(withId(R.id.noDataTextView)).check(matches(isDisplayed()))
+		onView(withId(R.id.addReminderFAB)).perform(click())
+		onView(withId(R.id.selectLocation)).perform(click())
+		onView(withId(R.id.save_button)).perform(click())
+
+		assert(getActivity(activityScenario) != null)
+		getActivity(activityScenario)?.run {
+			onView(withText(R.string.select_poi))
+				.inRoot(withDecorView(not(this.window.decorView)))
+				.check(matches(isDisplayed()))
+		}
+
+
+		activityScenario.close()
+	}
+
+	private fun getActivity(activityScenario: ActivityScenario<RemindersActivity>): Activity? {
+		var activity: Activity? = null
+		activityScenario.onActivity {
+			activity = it
+		}
+		return activity
 	}
 
 	@Test
