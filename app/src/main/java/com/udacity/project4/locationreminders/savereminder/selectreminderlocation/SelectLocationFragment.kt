@@ -36,7 +36,9 @@ import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
+import com.udacity.project4.utils.EspressoIdlingResource
 import com.udacity.project4.utils.setTitle
+import com.udacity.project4.utils.wrapEspressoIdlingResource
 import org.koin.android.ext.android.inject
 
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
@@ -78,6 +80,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     // Obtain the SupportMapFragment and get notified when the map is ready to be used.
     val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
     mapFragment.getMapAsync(this)
+
 
 
     binding.saveButton.setOnClickListener {

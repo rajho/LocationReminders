@@ -1,5 +1,7 @@
 package com.udacity.project4.locationreminders.reminderslist
 
+import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
@@ -11,19 +13,26 @@ import com.udacity.project4.locationreminders.data.dto.Result
 import kotlinx.coroutines.launch
 
 class RemindersListViewModel(
-    private val dataSource: ReminderDataSource
-) : BaseViewModel() {
-
-    // list that holds the reminder data to be displayed on the UI
-    val remindersList = MutableLiveData<List<ReminderDataItem>>()
-
-    val authenticationState = FirebaseUserLiveData().map { user ->
+    private val dataSource: ReminderDataSource,
+    val authenticationState: LiveData<AuthenticationState> = FirebaseUserLiveData().map { user ->
         if (user == null) {
             AuthenticationState.UNAUTHENTICATED
         } else {
             AuthenticationState.AUTHENTICATED
         }
     }
+) : BaseViewModel() {
+
+    // list that holds the reminder data to be displayed on the UI
+    val remindersList = MutableLiveData<List<ReminderDataItem>>()
+
+//    val authenticationState = FirebaseUserLiveData().map { user ->
+//        if (user == null) {
+//            AuthenticationState.UNAUTHENTICATED
+//        } else {
+//            AuthenticationState.AUTHENTICATED
+//        }
+//    }
 
     enum class AuthenticationState {
         AUTHENTICATED, UNAUTHENTICATED

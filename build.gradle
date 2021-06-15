@@ -7,7 +7,6 @@ buildscript {
     repositories {
         google()
         jcenter()
-
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.1'
@@ -45,7 +44,7 @@ ext {
     archLifecycleVersion = '2.2.0'
     cardVersion = '1.0.0'
     materialVersion = '1.1.0'
-    fragmentVersion = '1.1.0-alpha07'
+    fragmentVersion = '1.4.0-alpha02'
     recyclerViewVersion = '1.1.0'
     mockitoVersion = '2.8.9'
     constraintVersion = '2.0.0-rc1'

@@ -25,7 +25,6 @@ import org.junit.runner.RunWith
 @SmallTest
 class RemindersDaoTest {
 
-	//    TODO: Add testing implementation to the RemindersDao.kt
 	@get:Rule
 	var instantTaskExecutorRule = InstantTaskExecutorRule()
 
