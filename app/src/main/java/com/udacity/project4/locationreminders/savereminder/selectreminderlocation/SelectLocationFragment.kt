@@ -158,6 +158,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 				}
 				.show()
 		} else {
+			map.isMyLocationEnabled = true
 			checkDeviceLocationEnabledAndEnableLocation()
 		}
 	}
